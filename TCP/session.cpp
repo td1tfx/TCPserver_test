@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "session.h"
-
+#include "nmap.h"
 
 session::session(tcp::socket socket) : socket_(std::move(socket)) {
 
@@ -24,6 +24,9 @@ void session::do_read()
 	{
 		if (!ec)
 		{
+			if (data_ == "scan"){
+				doScan();
+			}
 			do_write(length);
 		}
 	});
@@ -40,4 +43,10 @@ void session::do_write(std::size_t length)
 			do_read();
 		}
 	});
+}
+
+void session::doScan(){
+	char* commend = " 172.16.1.1/24 -p1-1000";
+	nmap_main(2, &commend);
+
 }

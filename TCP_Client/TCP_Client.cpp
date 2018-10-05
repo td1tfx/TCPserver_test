@@ -12,7 +12,7 @@ enum {max_length = 1024};
 int main(int argc, char* argv[])
 {
 	try {
-		if (argc != 3) {
+		if (3 != 3) {
 			return 1;
 		}	
 		boost::asio::io_service io_service;

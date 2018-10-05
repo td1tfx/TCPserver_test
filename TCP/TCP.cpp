@@ -10,7 +10,7 @@
 int main(int argc, char* argv[])
 {
 	try {
-		if (argc != 2) {
+		if (2 != 2) {
 			std::cerr << "Usage: ";
 			return 1;
 		}

@@ -17,6 +17,7 @@ private:
 
 	void do_accept();
 
+
 	tcp::acceptor acceptor_;
 	tcp::socket socket_;
 
