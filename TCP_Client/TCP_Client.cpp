@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "boost\asio.hpp"
 #include <iostream>
+#include "Message.h"
 
 using boost::asio::ip::tcp;
 
@@ -24,16 +25,22 @@ int main(int argc, char* argv[])
 		//boost::asio::connect(s, resolver.resolve({ argv[1],argv[2] }));
 
 		std::cout << "Enter message:";
-		char request[max_length];
-		std::cin.getline(request, max_length);
-		size_t request_length = std::strlen(request);
-		boost::asio::write(s, boost::asio::buffer(request, request_length));
+		char request[Message::max_body_length+1];
+		while (std::cin.getline(request, Message::max_body_length+1)) {
+			Message msg;
+			msg.setBodyLength(std::strlen(request));
+			std::memcpy(msg.body(), request, msg.getBodyLength());
+			msg.encodeHeader();
+			boost::asio::write(s, boost::asio::buffer(msg.data(), msg.getLength()));
+		}
 
-		char reply[max_length];
-		size_t reply_length = boost::asio::read(s, boost::asio::buffer(reply, request_length));
-		std::cout << "Reply is:";
-		std::cout.write(reply, reply_length);
-		std::cout << "\n";
+
+
+		//char reply[max_length];
+		//size_t reply_length = boost::asio::read(s, boost::asio::buffer(reply, request_length));
+		//std::cout << "Reply is:";
+		//std::cout.write(reply, reply_length);
+		//std::cout << "\n";
 	}
 	catch (std::exception &e) {
 		std::cerr << "Exception:" << e.what() << "\n";

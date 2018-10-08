@@ -105,24 +105,24 @@ typedef struct NetType
 
   The program will be injected in the kernel by the PacketSetBPF() function and applied to every incoming packet. 
 */
-struct bpf_program
-{
-	UINT bf_len;				///< Indicates the number of instructions of the program, i.e. the number of struct bpf_insn that will follow.
-	struct bpf_insn* bf_insns;	///< A pointer to the first instruction of the program.
-};
+//struct bpf_program
+//{
+//	UINT bf_len;				///< Indicates the number of instructions of the program, i.e. the number of struct bpf_insn that will follow.
+//	struct bpf_insn* bf_insns;	///< A pointer to the first instruction of the program.
+//};
 
 /*!
   \brief A single BPF pseudo-instruction.
 
   bpf_insn contains a single instruction for the BPF register-machine. It is used to send a filter program to the driver.
 */
-struct bpf_insn
-{
-	USHORT code;		///< Instruction type and addressing mode.
-	UCHAR jt;			///< Jump if true
-	UCHAR jf;			///< Jump if false
-	int k;				///< Generic field used for various purposes.
-};
+//struct bpf_insn
+//{
+//	USHORT code;		///< Instruction type and addressing mode.
+//	UCHAR jt;			///< Jump if true
+//	UCHAR jf;			///< Jump if false
+//	int k;				///< Generic field used for various purposes.
+//};
 
 /*!
   \brief Structure that contains a couple of statistics values on the current capture.

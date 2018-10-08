@@ -332,10 +332,17 @@
 /***********************PROTOTYPES**********************************/
 
 /* Renamed main so that interactive mode could preprocess when necessary */
-int nmap_main(int argc, char *argv[]);
+extern "C" {
 
-int nmap_fetchfile(char *filename_returned, int bufferlen, const char *file);
-int gather_logfile_resumption_state(char *fname, int *myargc, char ***myargv);
+
+	__declspec(dllexport) int nmap_main(int argc, char *argv[]);
+
+
+	//int nmap_main(int argc, char *argv[]);
+
+	__declspec(dllexport) int nmap_fetchfile(char *filename_returned, int bufferlen, const char *file);
+	__declspec(dllexport) int gather_logfile_resumption_state(char *fname, int *myargc, char ***myargv);
+}
 
 #endif /* NMAP_H */
 

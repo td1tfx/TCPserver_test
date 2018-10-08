@@ -1,7 +1,7 @@
 #pragma once
 
 #include "boost/asio.hpp"
-
+#include "Message.h"
 
 using boost::asio::ip::tcp;
 
@@ -20,8 +20,11 @@ private:
 	void do_read();
 	void do_write(std::size_t length);
 	void doScan();
+	void readHeader();
+	void readBody();
 
 	enum { max_length = 1024 };
 	char data_[max_length];
+	Message msg_;
 };
 
