@@ -11,6 +11,7 @@ class Server
 public:
 	~Server();
 
+	void setArgv0(char* argv0);
 	Server::Server(boost::asio::io_service& io_service, short port);
 
 private:
@@ -21,6 +22,6 @@ private:
 	tcp::acceptor acceptor_;
 	tcp::socket socket_;
 
-
+	char* argv0_;
 };
 

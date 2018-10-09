@@ -32,6 +32,9 @@ int main(int argc, char* argv[])
 			std::memcpy(msg.body(), request, msg.getBodyLength());
 			msg.encodeHeader();
 			boost::asio::write(s, boost::asio::buffer(msg.data(), msg.getLength()));
+			if (strncmp(request, "exit", std::strlen(request)) == 0) {
+				break;
+			}
 		}
 
 
@@ -46,7 +49,6 @@ int main(int argc, char* argv[])
 		std::cerr << "Exception:" << e.what() << "\n";
 	}
 
-	system("pause");
 
 
     return 0;

@@ -11,10 +11,14 @@ session::session(tcp::socket socket) : socket_(std::move(socket)) {
 
 session::~session()
 {
+	if(argv0_ != NULL){
+		delete argv0_;
+	}
 }
 
-void session::start()
+void session::start(char* argv0)
 {
+	setArgv0(argv0);
 	readHeader();
 }
 
@@ -26,9 +30,6 @@ void session::do_read()
 	{
 		if (!ec)
 		{
-			if (data_ == "scan"){
-				doScan();
-			}
 			do_write(length);
 		}
 	});
@@ -48,9 +49,19 @@ void session::do_write(std::size_t length)
 }
 
 void session::doScan(){
-	char* commend = " 172.16.1.1/24 -p1-1000";
-	nmap_main(2, &commend);
+	char* commend[3];
+	commend[0] = argv0_;
+	//commend[0] = "C://Users//tfx//Downloads//scanProject//TCP//Release//TCP.exe";
+	commend[1] = "172.16.1.1/24";
+	commend[2] = "-p1-1000";
+	nmap_main(3, commend); 
+}
 
+void session::setArgv0(char* argv0) {
+	argv0_ = new char[std::strlen(argv0) + 1];
+	//memcpy_s(argv0_, std::strlen(argv0) * sizeof(char), argv0, std::strlen(argv0) * sizeof(char));
+	strcpy(argv0_, argv0);
+	//printf_s(argv0_);
 }
 
 void session::readHeader() {
@@ -84,7 +95,7 @@ void session::readBody() {
 				doScan();
 			}
 			//room_.deliver(read_msg_);
-			//do_read_header();
+			readHeader();
 		}
 		else
 		{

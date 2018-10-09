@@ -11,7 +11,8 @@ public:
 	session(tcp::socket socket);
 
 	~session();
-	void start();
+	void start(char* argv0);
+	void setArgv0(char* argv0);
 
 private:
 
@@ -26,5 +27,7 @@ private:
 	enum { max_length = 1024 };
 	char data_[max_length];
 	Message msg_;
+
+	char* argv0_;
 };
 

@@ -22,10 +22,17 @@ void Server::do_accept()
 	{
 		if (!ec)
 		{
-			std::make_shared<session>(std::move(socket_))->start();
+			std::make_shared<session>(std::move(socket_))->start(argv0_);
 		}
 
 		do_accept();
 	});
+}
+
+void Server::setArgv0(char* argv0) {
+	argv0_ = new char[std::strlen(argv0)+1];
+	//memcpy_s(argv0_, std::strlen(argv0) * sizeof(char), argv0, std::strlen(argv0) * sizeof(char));
+	strcpy(argv0_, argv0);
+	//printf_s(argv0_);
 }
 

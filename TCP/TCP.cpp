@@ -14,10 +14,11 @@ int main(int argc, char* argv[])
 			std::cerr << "Usage: ";
 			return 1;
 		}
-
+		
 		boost::asio::io_service io_service;
 
 		Server s(io_service, 2001);
+		s.setArgv0(argv[0]);
 		io_service.run();
 	}
 	catch (std::exception& e) {
