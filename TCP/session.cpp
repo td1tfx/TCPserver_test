@@ -49,12 +49,30 @@ void session::do_write(std::size_t length)
 }
 
 void session::doScan(){
-	char* commend[3];
+	char* commend[5];
 	commend[0] = argv0_;
 	//commend[0] = "C://Users//tfx//Downloads//scanProject//TCP//Release//TCP.exe";
-	commend[1] = "172.16.1.1/24";
+	commend[1] = "172.16.1.77";
 	commend[2] = "-p1-1000";
-	nmap_main(3, commend); 
+	commend[3] = "-oN";
+	commend[4] = "output.txt";
+	nmap_main(5, commend); 
+
+	//get record
+
+	std::ifstream in("output.txt");	
+	std::string line; 	
+	if (in) // 有该文件	
+	{		while (getline (in, line))		
+	{ 			
+		write_(line.c_str());
+	}	
+	}else 
+	{		
+		write_("no scan result exist.");	
+	}
+
+
 }
 
 void session::setArgv0(char* argv0) {
@@ -92,6 +110,7 @@ void session::readBody() {
 			//auto ifo = new char[msg_.getBodyLength()];
 			//memcpy(ifo, msg_.body(), msg_.getBodyLength());
 			if (strncmp(msg_.body(), "scan", msg_.getBodyLength()) == 0) {
+				write_("Network Scan begin!");
 				doScan();
 			}
 			//room_.deliver(read_msg_);
@@ -104,3 +123,44 @@ void session::readBody() {
 	});
 
 }
+
+void session::write_() {
+	auto self(shared_from_this());
+	boost::asio::async_write(socket_,
+		boost::asio::buffer(write_msgs_.front().data(),
+			write_msgs_.front().getLength()),
+		[this, self](boost::system::error_code ec, std::size_t /*length*/)
+	{
+		if (!ec)
+		{
+			write_msgs_.pop_front();
+			if (!write_msgs_.empty())
+			{
+				write_();
+			}
+		}
+		else
+		{
+			//socket_.close();
+		}
+	});
+}
+
+void session::write_(Message msg) {
+		bool write_in_progress = !write_msgs_.empty();
+		write_msgs_.push_back(msg);
+		if (!write_in_progress) {
+			write_();
+		}
+}
+
+void session::write_(const char* msg) {
+	Message msg_t;
+	msg_t.setBodyLength(std::strlen(msg));
+	std::memcpy(msg_t.body(), msg, msg_t.getBodyLength());
+	msg_t.encodeHeader();
+	write_(msg_t);
+}
+
+
+
